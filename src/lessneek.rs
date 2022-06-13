@@ -12,23 +12,38 @@ pub fn sublist<T: PartialEq>(v1: &[T], v2: &[T]) -> Comparison {
         _ => (v1, v2, Equal),
     };
 
-    let mut i = 0; // Big list index.
-    let mut j = 0; // Small list index.
+    let (big_len, small_len) = (big_list.len(), small_list.len());
+    let mut bi = 0;
+    let mut si= 0;
+    let mut bxi;
+    let mut sxi;
+    let mut bip = 0;
 
-    while i < big_list.len() {
-        if big_list.len() - i < small_list.len() - j {
+    while bi < big_len {
+        sxi = small_len - si - 1;
+        bxi = bip + sxi;
+
+        if big_len - bi < small_len - si {
+            // Unequal.
             break;
         }
-        if big_list[i] == small_list[j] {
-            if j == small_list.len() - 1 {
+
+        if big_list[bi] == small_list[si] && big_list[bxi] == small_list[sxi] {
+            si += 1;
+            if si >= sxi {
+                // Match found.
                 return pre_result;
             }
-            j += 1;
-        } else if j > 0 {
-            i -= j; // Rewind in case of partial sublisting.
-            j = 0;
+        } else if si > 0 {
+            // Rewind in case of partial sublisting.
+            bip = bi - si;
+            bi = bip;
+            si = 0;
         }
-        i += 1;
+        else {
+            bip = bi + 1;
+        }
+        bi += 1;
     }
     Unequal
 }
