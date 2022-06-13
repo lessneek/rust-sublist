@@ -1,15 +1,16 @@
 use std::ops::Range;
 use std::rc::Rc;
-use sublist::{alireza4050, iagolito, lessneek, Comparison};
+use sublist::{alireza4050, iagolito, lessneek, vagrawal, Comparison};
 
 // Parameters.
 type ItemType = u8;
 type AlgType = fn(&[ItemType], &[ItemType]) -> Comparison;
 const REPEAT: u8 = 2;
-const ALGORITHMS: [(&str, AlgType); 3] = [
+const ALGORITHMS: [(&str, AlgType); 4] = [
     ("lessneek's sublist", lessneek::sublist),
     ("alireza4050's sublist", alireza4050::sublist),
     ("iago-lito's sublist", iagolito::sublist),
+    ("vargawal", vagrawal::sublist)
 ];
 
 #[test]
