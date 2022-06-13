@@ -1,15 +1,15 @@
 use crate::Comparison;
 
-pub fn sublist<T: PartialEq>(_first_list: &[T], _second_list: &[T]) -> Comparison {
+pub fn sublist<T: PartialEq>(v1: &[T], v2: &[T]) -> Comparison {
     use Comparison::*;
 
-    let (big_list, small_list, pre_result) = match (_first_list.len(), _second_list.len()) {
+    let (big_list, small_list, pre_result) = match (v1.len(), v2.len()) {
         (0, 0) => return Equal,
         (0, _) => return Sublist,
         (_, 0) => return Superlist,
-        (m, n) if m < n => (_second_list, _first_list, Sublist),
-        (m, n) if m > n => (_first_list, _second_list, Superlist),
-        _ => (_first_list, _second_list, Equal),
+        (m, n) if m < n => (v2, v1, Sublist),
+        (m, n) if m > n => (v1, v2, Superlist),
+        _ => (v1, v2, Equal),
     };
 
     let mut i = 0; // Big list index.
@@ -19,7 +19,6 @@ pub fn sublist<T: PartialEq>(_first_list: &[T], _second_list: &[T]) -> Compariso
         if big_list.len() - i < small_list.len() - j {
             break;
         }
-
         if big_list[i] == small_list[j] {
             if j == small_list.len() - 1 {
                 return pre_result;
