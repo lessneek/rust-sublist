@@ -1,31 +1,47 @@
 use std::ops::Range;
 use std::rc::Rc;
-use sublist::{alireza4050, sublist, Comparison};
+use sublist::{alireza4050, iagolito, sublist, Comparison};
 
 // Parameters.
 type ItemType = u8;
 type AlgType = fn(&[ItemType], &[ItemType]) -> Comparison;
-const REPEAT: u8 = 3;
-const BIG_LIST_LEN: usize = 3_000_000;
-const SMALL_LIST_LEN: usize = 11;
-const RANGE: Range<ItemType> = 0..7;
+const REPEAT: u8 = 2;
+const ALGORITHMS: [(&str, AlgType); 3] = [
+    ("lessneek's sublist", sublist),
+    ("alireza4050's sublist", alireza4050::sublist),
+    ("iago-lito's sublist", iagolito::sublist),
+];
 
 #[test]
-fn benchmark_sublist_algorithms() {
+#[ignore]
+fn benchmark_all_with_huge_random_data() {
     // Input data.
-    let big_list = Rc::new(rnd_list(RANGE, BIG_LIST_LEN));
-    let small_list = Rc::new(rnd_list(RANGE, SMALL_LIST_LEN));
+    let v1 = rnd_list(0..9, 300_000_000);
+    let v2 = rnd_list(0..9, 11);
+    benchmark_all(v1, v2, REPEAT);
+}
 
+#[test]
+#[ignore]
+fn benchmark_all_with_huge_static_data() {
+    let v1: Vec<ItemType> = vec![0; 200_000];
+    let mut v2: Vec<ItemType> = vec![0; 100_000];
+    v2.push(1);
+    benchmark_all(v1, v2, REPEAT);
+}
+
+fn benchmark_all(v1: Vec<ItemType>, v2: Vec<ItemType>, repeat: u8) {
+    let (v1, v2) = (Rc::new(v1), Rc::new(v2));
     let benchmark = |name: &str, task_fn: AlgType| {
-        let (big_list, small_list) = (big_list.clone(), small_list.clone());
+        let (big_list, small_list) = (v1.clone(), v2.clone());
         let task_fn = Box::new(move || {
             task_fn(&big_list, &small_list);
         });
-        run_benchmark(name, task_fn, REPEAT);
+        run_benchmark(name, task_fn, repeat);
     };
-
-    benchmark("lessneek's sublist", sublist);
-    benchmark("alireza4050's sublist", alireza4050::sublist);
+    for alg in ALGORITHMS {
+        benchmark(alg.0, alg.1);
+    }
 }
 
 fn run_benchmark(name: &str, task_fn: Box<dyn Fn()>, repeat: u8) {
