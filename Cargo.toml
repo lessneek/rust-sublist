@@ -4,4 +4,4 @@ name = "sublist"
 version = "0.0.0"
 
 [dependencies]
-rand = "0.8.5"
+rand = { version = "0.8.5", features = ["small_rng"] }

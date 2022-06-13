@@ -16,16 +16,16 @@ const ALGORITHMS: [(&str, AlgType); 3] = [
 #[ignore]
 fn benchmark_all_with_huge_random_data() {
     // Input data.
-    let v1 = rnd_list(0..9, 300_000_000);
-    let v2 = rnd_list(0..9, 11);
+    let v1 = rnd_list(0..9, 300_000_000, 9);
+    let v2 = rnd_list(0..9, 11, 139);
     benchmark_all(v1, v2, REPEAT);
 }
 
 #[test]
 #[ignore]
 fn benchmark_all_with_huge_static_data() {
-    let v1: Vec<ItemType> = vec![0; 200_000];
-    let mut v2: Vec<ItemType> = vec![0; 100_000];
+    let v1: Vec<ItemType> = vec![0; 1_000_000];
+    let mut v2: Vec<ItemType> = vec![0; 500_000];
     v2.push(1);
     benchmark_all(v1, v2, REPEAT);
 }
@@ -70,9 +70,11 @@ fn run_benchmark(name: &str, task_fn: Box<dyn Fn()>, repeat: u8) {
     println!("]\n\x1b[92mBest result: \x1b[95m{:?} \x1b[0m", best_result);
 }
 
-fn rnd_list(range: Range<ItemType>, len: usize) -> Vec<ItemType> {
-    use rand::{distributions::Uniform, Rng};
-    rand::thread_rng()
+fn rnd_list(range: Range<ItemType>, len: usize, seed: u64) -> Vec<ItemType> {
+    use rand::distributions::Uniform;
+    use rand::prelude::*;
+
+    SmallRng::seed_from_u64(seed)
         .sample_iter(Uniform::from(range))
         .take(len)
         .collect()
