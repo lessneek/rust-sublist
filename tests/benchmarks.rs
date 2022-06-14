@@ -5,7 +5,7 @@ use sublist::{alireza4050, iagolito, lessneek, vagrawal, bobahop, Comparison};
 // Parameters.
 type ItemType = u8;
 type AlgType = fn(&[ItemType], &[ItemType]) -> Comparison;
-const REPEAT: u8 = 2;
+const REPEAT: u8 = 3;
 const ALGORITHMS: [(&str, AlgType); 5] = [
     ("lessneek's sublist", lessneek::sublist),
     ("alireza4050's sublist", alireza4050::sublist),
@@ -18,8 +18,8 @@ const ALGORITHMS: [(&str, AlgType); 5] = [
 #[ignore]
 fn benchmark_all_with_huge_random_data() {
     // Input data.
-    let v1 = rnd_list(0..9, 300_000_000, 9);
-    let v2 = rnd_list(0..9, 11, 139);
+    let v1 = rnd_list(0..9, 300_000_000, 42);
+    let v2 = rnd_list(0..9, 9, 424242);
     benchmark_all(v1, v2, REPEAT);
 }
 
@@ -67,7 +67,7 @@ fn run_benchmark(name: &str, task_fn: Box<dyn Fn()>, repeat: u8) {
             print!(", ")
         }
     }
-    let best_result = results.into_iter().min().unwrap();
+    let best_result: Duration = results.into_iter().min().unwrap();
 
     println!("]\n\x1b[92mBest result: \x1b[95m{:?} \x1b[0m", best_result);
 }
