@@ -14,7 +14,7 @@ pub fn sublist<T: PartialEq>(v1: &[T], v2: &[T]) -> Comparison {
 
     let (big_len, small_len) = (big_list.len(), small_list.len());
     let mut bi = 0;
-    let mut si= 0;
+    let mut si = 0;
     let mut bxi;
     let mut sxi;
     let mut bip = 0;
@@ -39,8 +39,7 @@ pub fn sublist<T: PartialEq>(v1: &[T], v2: &[T]) -> Comparison {
             bip = bi - si;
             bi = bip;
             si = 0;
-        }
-        else {
+        } else {
             bip = bi + 1;
         }
         bi += 1;
